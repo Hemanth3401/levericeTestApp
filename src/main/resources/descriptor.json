@@ -1,0 +1,38 @@
+{
+  "id": "first",
+  "version": 0,
+  "facets": [
+    {
+      "id": "root",
+      "name": "Our root"
+    },
+    {
+      "id": "info",
+      "name": "Info Facet"
+    },
+    {
+      "id": "news",
+      "name": "News Listed"
+    },
+    {
+      "id": "weather",
+      "name": "Current Weather"
+    },
+    {
+      "id": "jokes",
+      "name": "Random Jokes"
+    },
+    {
+      "id": "gsearch",
+      "name": "Google Search"
+    },
+    {
+      "id": "music",
+      "name": "music Search & External Play"
+    },
+    {
+      "id": "calendly",
+      "name": "Calendly Notification"
+    }
+  ]
+}

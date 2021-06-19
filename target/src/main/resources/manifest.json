@@ -1,0 +1,12 @@
+{
+  "appId": "first",
+  "versionInfo": {
+    "major": 0,
+    "minor": 0,
+    "build": 1,
+    "suffix": "SNAPSHOT"
+  },
+  "name": "First App",
+  "tagLine": "First app",
+  "description": "My first app"
+}

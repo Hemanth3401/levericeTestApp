@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <mkdir dir="target/src/main/resources"/>
+  <delete file="target/src/main/resources/manifest.json" failonerror="false"/>
+  <loadresource property="description" failonerror="false">
+    <file file="src/main/resources/description.md"/>
+    <filterchain>
+      <tokenfilter>
+        <filetokenizer/>
+        <replacestring from="&quot;" to="\&quot;"/>
+        <replaceregex pattern="\n" replace="\\\\n" flags="g" byline="true"></replaceregex>
+      </tokenfilter>
+    </filterchain>
+  </loadresource>
+  <loadresource property="logo" failonerror="false">
+    <file file="src/main/resources/assets/logo.svg"/>
+    <filterchain>
+      <tokenfilter>
+        <filetokenizer/>
+        <replacestring from="&quot;" to="\&quot;"/>
+        <replaceregex pattern="\n" replace="\\\\n" flags="g" byline="true"></replaceregex>
+      </tokenfilter>
+    </filterchain>
+  </loadresource>
+  <loadresource property="fullManifest" failonerror="false">
+    <file file="src/main/resources/manifest.json"/>
+    <filterchain>
+      <tokenfilter>
+        <filetokenizer/>
+        <replacestring from="@DESCRIPTION@" to="${description}"/>
+        <replacestring from="@LOGO@" to="${logo}"/>
+      </tokenfilter>
+    </filterchain>
+  </loadresource>
+  <script language="groovy">def ant = new groovy.ant.AntBuilder();
+
+                                    String jsonString = project.getProperty(&quot;fullManifest&quot;) as String;
+                                    String projectBuildDir = project.getProperty(&quot;project.build.directory&quot;) as String;
+
+                                    if (!jsonString) { return; }
+
+                                    // save fullManifest in case we do not want to change it
+                                    ant.echo(file: &quot;$projectBuildDir/src/main/resources/manifest.json&quot;, message:
+                                    jsonString)
+
+                                    def coreRevision = ant.project.getProperty(&quot;requiredCoreRevision&quot;);
+
+                                    if (!coreRevision) { return; }
+
+                                    def json = new groovy.json.JsonSlurper().parseText(jsonString);
+
+                                    if (json.versionInfo.requiredCoreRevision) { return; }
+                                    json.versionInfo.requiredCoreRevision = coreRevision;
+                                    def result = groovy.json.JsonOutput.toJson(json)
+                                    def prettyResult = groovy.json.JsonOutput.prettyPrint(result);
+                                    ant.echo(file: &quot;$projectBuildDir/src/main/resources/manifest.json&quot;, message:
+                                    prettyResult)</script>
+  <zip destfile="target/first-app_0.0.1-SNAPSHOT.zip" duplicate="add">
+    <zipfileset dir="target/library" encoding="UTF-8" erroronmissingdir="false"/>
+    <zipfileset excludes="target/** src/test/** pom.xml **.iml .idea/** .mvn/** src/main/resources/manifest.json" dir="" encoding="UTF-8"/>
+    <zipfileset includes="src/main/resources/manifest.json" dir="target" encoding="UTF-8"/>
+  </zip>
+</target>
+</project>
